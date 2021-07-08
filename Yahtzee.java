@@ -14,7 +14,8 @@ public class Yahtzee extends JFrame {
     private static Board board;
     private static Menu menu;
     private static Image BgImage;
-    private static int MAX_PLAYERS = 20;
+    public static final int MAX_PLAYERS = 20;
+    public static final int MIN_PLAYERS = 2;
 
     public Yahtzee() {
         URL url = this.getClass().getResource("/Yahtzee/images/background-green.jpg");
@@ -30,7 +31,7 @@ public class Yahtzee extends JFrame {
                 String input = menu.TxtEntry.getText();
                 try {
                     int num = Integer.parseInt(input);
-                    if (num > MAX_PLAYERS || num < 1) {
+                    if (num > MAX_PLAYERS || num < MIN_PLAYERS) {
                         menu.displayInputSizeErrorMessage();
                     } else {
                         menu.dismissErrorMessage();

@@ -32,6 +32,7 @@ public class Menu extends Panel {
         errorLabel.setForeground(Color.RED);
         errorLabel.setVisible(false);
         TxtEntry = new JTextField(2);
+        TxtEntry.setText("" + Yahtzee.MIN_PLAYERS);
         startButton = new JButton("Start Game");
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
@@ -45,18 +46,18 @@ public class Menu extends Panel {
     }
 
     public void displayInputSizeErrorMessage() {
-        TxtEntry.setText("");
-        errorLabel.setText("Too many players!\nPlease pick a number between (and including) 1 to 20.");
+        TxtEntry.setText("" + Yahtzee.MIN_PLAYERS);
+        errorLabel.setText("Please pick a number between (and including) 2 to 20.");
         errorLabel.setVisible(true);
     }
 
     public void dismissErrorMessage() {
-        TxtEntry.setText("");
+        TxtEntry.setText("" + Yahtzee.MIN_PLAYERS);
         errorLabel.setVisible(false);
     }
 
     public void displayInputTypeErrorMessage() {
-        TxtEntry.setText("");
+        TxtEntry.setText("" + Yahtzee.MIN_PLAYERS);
         errorLabel.setText("Please enter an integer!");
         errorLabel.setVisible(true);
     }
