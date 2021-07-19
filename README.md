@@ -14,4 +14,15 @@
 ### Lucas Zavalia
 - 
 ### William Tsaur
-- 
+- Panel.java
+- Board.java
+- Menu.java
+- Yahtzee.java
+- Player.java
+- Scorecard.java
+- Constants.java
+- DiceModel.java
+- ScorecardPanel.java
+- Implemented Dice rolling
+- Implemented Player turns
+- Designed and Implemented Menu, Board, and Scoreboard layout and logic

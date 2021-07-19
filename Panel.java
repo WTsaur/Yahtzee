@@ -1,23 +1,24 @@
 package Yahtzee;
 
-import javax.swing.JPanel;
+
+import java.net.URL;
+
 import java.awt.Image;
-import javax.swing.ImageIcon;
 import java.awt.Dimension;
 import java.awt.Graphics;
 
+import javax.swing.JPanel;
+import javax.swing.ImageIcon;
+
 public class Panel extends JPanel {
     
-    private Image bgImg;
+    protected Image bgImg;
     protected int WIDTH;
     protected int HEIGHT;
 
-    public Panel(String img) {
-        this(new ImageIcon(img).getImage());
-    }
-
-    public Panel(Image bgImg) {
-        this.bgImg = bgImg;
+    public Panel(String imgPath) {
+        URL url = this.getClass().getResource(imgPath);
+        bgImg = new ImageIcon(url).getImage();
         this.WIDTH = bgImg.getWidth(null);
         this.HEIGHT = bgImg.getHeight(null);
         Dimension size = new Dimension(WIDTH, HEIGHT);
