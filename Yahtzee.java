@@ -11,6 +11,7 @@ public class Yahtzee extends JFrame {
 
     private static Board board;
     private static Menu menu;
+    private static RestartScreen rs;
     private static int RoundCount;
     private static int RoundSize;
     private static int CurrentTurn;
@@ -30,10 +31,13 @@ public class Yahtzee extends JFrame {
     private void InitUI() {
         menu = new Menu(Constants.BACKGROUND_IMAGE_PATH);
         board = new Board(Constants.BACKGROUND_IMAGE_PATH);
+	rs = new RestartScreen(Constants.BACKGROUND_IMAGE_PATH);
         board.setVisible(false);
+	rs.setVisible(false);
 
         getContentPane().add(board);
         getContentPane().add(menu);
+	getContentPane().add(rs);
         pack();
         setTitle(Constants.APP_NAME);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -72,5 +76,7 @@ public class Yahtzee extends JFrame {
 
     public static void EndGame() {
         //TODO: Display Score rankings and etc.
+	board.setVisible(false);
+	rs.setVisible(true);
     }
 }
