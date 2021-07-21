@@ -53,7 +53,7 @@ public class Yahtzee extends JFrame {
     }
 
     public static void NextTurn() {
-        if (--RoundCount < 0) {
+        if (--RoundCount <= 0) {
             EndGame();
         } else {
             if (++CurrentTurn >= RoundSize) {
@@ -71,6 +71,6 @@ public class Yahtzee extends JFrame {
     }
 
     public static void EndGame() {
-        // Display Score rankings and etc.
+        //TODO: Display Score rankings and etc.
     }
 }

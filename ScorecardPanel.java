@@ -214,10 +214,6 @@ public class ScorecardPanel extends JPanel {
         }
     }
 
-    public void viewRollPossiblities(List<Integer> roll) {
-        showOptionsForRoll(roll);
-    }
-
     public void setScoreLabels() {
         String rowName;
         int score;
@@ -238,7 +234,7 @@ public class ScorecardPanel extends JPanel {
         grandTotalRow.setScoreLabel(ScoreData.getGrandTotal());
     }
 
-    public void showOptionsForRoll(List<Integer> roll) {
+    public void calculateOptionsForRoll(List<Integer> roll) {
         Collections.sort(roll);
         String rollType;
         for (ScorecardRow row : upperScoreRows) {
@@ -272,8 +268,10 @@ public class ScorecardPanel extends JPanel {
 
     public int calcRoll(String type, List<Integer> roll)
 	{
+        List<Integer> noDupes = new ArrayList<Integer>(new HashSet<Integer>(roll));
+        Collections.sort(noDupes);
 		int sum = 0;
-		switch (type)
+        switch (type)
 		{
 		case "Aces":
 			for (int i = 0; i < 5; i++)
@@ -339,35 +337,42 @@ public class ScorecardPanel extends JPanel {
             }
 			break;
 		case "4 of a kind":
-            if ((roll.get(0) == roll.get(1) && roll.get(0) == roll.get(2) && roll.get(0) == roll.get(3)) ||
-            (roll.get(1) == roll.get(2) && roll.get(1) == roll.get(3) && roll.get(1) == roll.get(4))) {
-                for (Integer i : roll) {
-                    sum += i;
+            if (noDupes.size() == 2) {
+                if ((roll.get(0) == roll.get(1) && roll.get(0) == roll.get(2) && roll.get(0) == roll.get(3)) ||
+                (roll.get(1) == roll.get(2) && roll.get(1) == roll.get(3) && roll.get(1) == roll.get(4))) {
+                    for (Integer i : roll) {
+                        sum += i;
+                    }
                 }
             }
 			break;
 		case "Full House":
-			if (((roll.get(0) == roll.get(1) && roll.get(0) == roll.get(2)) && (roll.get(3) == roll.get(4))) ||
-				((roll.get(2) == roll.get(3) && roll.get(2) == roll.get(4))  && (roll.get(0) == roll.get(1))))
-				{
+            if (noDupes.size() == 2) {
+                if (((roll.get(0) == roll.get(1) && roll.get(0) == roll.get(2)) && (roll.get(3) == roll.get(4))) ||
+				    ((roll.get(2) == roll.get(3) && roll.get(2) == roll.get(4))  && (roll.get(0) == roll.get(1)))) {
 					sum = 25;
 				}
+            }
 			break;
 		case "Small Straight":
-                /* TODO: issue is if a roll is 1, 2, 2, 3 ,4  this is a small straight but code won't see
-                1, 2, 3, 4 */
-			if ((roll.get(0) + 1 == roll.get(1) && roll.get(1) + 1 == roll.get(2) && roll.get(2) + 1 == roll.get(3)) ||
-				(roll.get(1) + 1 == roll.get(2) && roll.get(2) + 1 == roll.get(3) && roll.get(3) + 1 == roll.get(4)))
-			{
-				sum = 30;
-			}
+            if (noDupes.size() >= 4) {
+                if (noDupes.get(0) + 1 == noDupes.get(1) && noDupes.get(1) + 1 == noDupes.get(2) && noDupes.get(2) + 1 == noDupes.get(3)) {
+                    sum = 30;
+                } else if (noDupes.size() == 5) {
+                    if (noDupes.get(1) + 1 == noDupes.get(2) && noDupes.get(2) + 1 == noDupes.get(3) && noDupes.get(3) + 1 == noDupes.get(4)) {
+                        sum = 30;
+                    }
+                }
+            }
 			break;
 		case "Large Straight":
-			if (roll.get(0) + 1 == roll.get(1) && roll.get(1) + 1 == roll.get(2)
-                && roll.get(2) + 1 == roll.get(3) && roll.get(3) + 1 == roll.get(4))
-			{
-				sum = 40;
-			}
+            if (noDupes.size() == 5) {
+                if (noDupes.get(0) + 1 == noDupes.get(1) && noDupes.get(1) + 1 == noDupes.get(2)
+                && noDupes.get(2) + 1 == noDupes.get(3) && noDupes.get(3) + 1 == noDupes.get(4))
+                {
+                    sum = 40;
+                }
+            }
 			break;
 		case "Chance":
 			for (Integer i : roll) {
@@ -376,8 +381,7 @@ public class ScorecardPanel extends JPanel {
 			break;
         case "Bonus Yahtzee":
 		case "Yahtzee":
-			if (roll.get(0) == roll.get(1) && roll.get(0) == roll.get(2)
-                && roll.get(0) == roll.get(3) && roll.get(0) == roll.get(4))
+            if (noDupes.size() == 1)
 			{
 				sum = 50;
 			}

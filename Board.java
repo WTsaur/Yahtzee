@@ -38,6 +38,7 @@ public class Board extends Panel {
     private static Player CurrentPlayer = new Player("");
     private int ROLLBTN_SCALE_VAL = 50;
     private static int rollCount = 0;
+    private static boolean rollHasChanged = false;
 
     public Board(String bgImgPath) {
         super(bgImgPath);
@@ -55,7 +56,6 @@ public class Board extends Panel {
         // Create Dice and add to List
         for (int i = 0; i < 5; ++i) {
             DiceModel die = new DiceModel();
-            // die.setVisible(false);
             Dice.add(die);
         }
 
@@ -168,7 +168,10 @@ public class Board extends Panel {
             if (CurrentRoll.size() > 0) {
                 dicePanel.setVisible(false);
                 rollButton.setEnabled(false);
-                scorecardPanel.viewRollPossiblities(CurrentRoll);
+                if (rollHasChanged) {
+                    scorecardPanel.calculateOptionsForRoll(CurrentRoll);
+                    rollHasChanged = false;
+                }
                 scorecardPanel.setVisible(true);
             } else {
                 displayNoRollErrorMessage();
@@ -193,9 +196,14 @@ public class Board extends Panel {
             }
             for (DiceModel die : Dice) {
                 if (!die.isSelected()) {
-                    CurrentRoll.add(die.roll());
+                    die.roll();
                 }
             }
+            CurrentRoll.clear();
+            for (DiceModel die : Dice) {
+                CurrentRoll.add(die.getValue());
+            }
+            rollHasChanged = true;
         } else {
             displayMaxRollErrorMessage();
         }
