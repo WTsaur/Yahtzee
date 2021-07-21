@@ -4,6 +4,7 @@ import java.util.Vector;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
@@ -27,10 +28,11 @@ import javax.swing.event.ListSelectionListener;
 public class Menu extends Panel {
 
     private GridBagLayout gbl;
-    public JTextField TxtEntry;
-    public JLabel menuLabel;
-    public JButton startButton;
-    public JButton addButton;
+    private JTextField TxtEntry;
+    private JLabel menuLabel;
+    private JButton startButton;
+    private JButton addButton;
+    private JButton clearButton;
     private DefaultListModel<String> listModel;
     private JList<String> PlayerList;
 
@@ -41,6 +43,7 @@ public class Menu extends Panel {
         GridBagConstraints gbc = new GridBagConstraints();
 
         menuLabel = new JLabel("Players");
+        menuLabel.setFont(new Font("Sansserif", Font.BOLD, 24));
         menuLabel.setForeground(Color.WHITE);
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -143,7 +146,24 @@ public class Menu extends Panel {
         gbc.gridwidth = 1;
         add(startButton, gbc);
 
+        clearButton = new JButton("Clear Players");
+        clearButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                listModel.clear();
+            }
+        });
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.gridwidth = 1;
+        add(clearButton, gbc);
+
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    }
+
+    public void reset() {
+        TxtEntry.setText("");
+        PlayerList.setSelectedIndex(-1);
     }
 
     public void displayErrorMessage(String msg) {

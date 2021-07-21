@@ -36,7 +36,7 @@ public class Board extends Panel {
     private static List<Integer> CurrentRoll = new ArrayList<Integer>();
     private final int BoardBorder = 20;
     private static Player CurrentPlayer = new Player("");
-    private int ROLLBTN_SCALE_VAL = 50;
+    private int BTN_SCALE_VAL = 50;
     private static int rollCount = 0;
     private static boolean rollHasChanged = false;
 
@@ -59,13 +59,26 @@ public class Board extends Panel {
             Dice.add(die);
         }
 
+        // create pause button
+        URL urlPE = this.getClass().getResource(Constants.PAUSE_IMAGE_PATH);
+        Image imgPE = new ImageIcon(urlPE).getImage().getScaledInstance(BTN_SCALE_VAL, BTN_SCALE_VAL, Image.SCALE_DEFAULT);
+        ImageIcon peIcon = new ImageIcon(imgPE);
+        JButton pauseButton = new JButton(peIcon);
+        pauseButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Yahtzee.togglePauseScreen();
+                Yahtzee.toggleBoardScreen();
+            }
+        });
+
         // create score card button and label
         JLabel scoreLabel = new JLabel("Score Card");
         scoreLabel.setFont(new Font("Sansserif", Font.PLAIN, 18));
         scoreLabel.setForeground(Color.WHITE);
 
         URL urlSC = this.getClass().getResource(Constants.SCORECARD_IMAGE_PATH);
-        Image imgSC = new ImageIcon(urlSC).getImage().getScaledInstance(ROLLBTN_SCALE_VAL, ROLLBTN_SCALE_VAL, Image.SCALE_DEFAULT);
+        Image imgSC = new ImageIcon(urlSC).getImage().getScaledInstance(BTN_SCALE_VAL, BTN_SCALE_VAL, Image.SCALE_DEFAULT);
         ImageIcon scIcon = new ImageIcon(imgSC);
         JButton scoreCardButton = new JButton(scIcon);
         scoreCardButton.addActionListener(new ActionListener() {
@@ -81,7 +94,7 @@ public class Board extends Panel {
         rollLabel.setForeground(Color.WHITE);
 
         URL urlRB = this.getClass().getResource(Constants.ROLLBTN_IMAGE_PATH);
-        Image imgRB = new ImageIcon(urlRB).getImage().getScaledInstance(ROLLBTN_SCALE_VAL, ROLLBTN_SCALE_VAL, Image.SCALE_DEFAULT);
+        Image imgRB = new ImageIcon(urlRB).getImage().getScaledInstance(BTN_SCALE_VAL, BTN_SCALE_VAL, Image.SCALE_DEFAULT);
         ImageIcon dieIcon = new ImageIcon(imgRB);
         rollButton = new JButton(dieIcon);
         rollButton.addActionListener(new ActionListener() {
@@ -92,12 +105,19 @@ public class Board extends Panel {
         });
 
         // JPanel for Player name and roll tracker
-        JPanel topLeftPanel = new JPanel();
-        topLeftPanel.setLayout(new BoxLayout(topLeftPanel, BoxLayout.PAGE_AXIS));
-        topLeftPanel.setOpaque(false);
-        topLeftPanel.add(currentPlayerLabel);
-        topLeftPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        topLeftPanel.add(rollTrackerLabel);
+        JPanel labelPanel = new JPanel();
+        labelPanel.setLayout(new BoxLayout(labelPanel, BoxLayout.PAGE_AXIS));
+        labelPanel.setOpaque(false);
+        labelPanel.add(currentPlayerLabel);
+        labelPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        labelPanel.add(rollTrackerLabel);
+
+        // JPanel for labelPanel and pause button
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new BorderLayout());
+        topPanel.setOpaque(false);
+        topPanel.add(labelPanel, BorderLayout.LINE_START);
+        topPanel.add(pauseButton, BorderLayout.LINE_END);
 
         // JPanel for Dice
         JPanel diceInnerTopPanel = new JPanel(new FlowLayout());
@@ -123,40 +143,46 @@ public class Board extends Panel {
         dicePanel.add(diceInnerBottomPanel, gbc);
 
         // JPanel for dice roll and score card buttons/labels
-        JPanel bottomRightPanel = new JPanel();
-        bottomRightPanel.setLayout(new GridBagLayout());
-        bottomRightPanel.setOpaque(false);
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new GridBagLayout());
+        buttonPanel.setOpaque(false);
         gbc.gridx = 0;
         gbc.gridy = 0;
-        bottomRightPanel.add(scoreLabel, gbc);
-        gbc.gridy = 1;
-        bottomRightPanel.add(scoreCardButton, gbc);
-        gbc.gridy = 2;
-        bottomRightPanel.add(Box.createRigidArea(new DimensionUIResource(0, 10)), gbc);
-        gbc.gridy = 3;
-        bottomRightPanel.add(rollLabel, gbc);
-        gbc.gridy = 4;
-        bottomRightPanel.add(rollButton, gbc);
+        buttonPanel.add(scoreLabel, gbc);
+        gbc.gridy++;
+        buttonPanel.add(scoreCardButton, gbc);
+        gbc.gridy++;
+        buttonPanel.add(Box.createRigidArea(new DimensionUIResource(0, 10)), gbc);
+        gbc.gridy++;
+        buttonPanel.add(rollLabel, gbc);
+        gbc.gridy++;
+        buttonPanel.add(rollButton, gbc);
 
         scorecardPanel = new ScorecardPanel();
         scorecardPanel.setVisible(false);
 
         //add all components to board
-        add(topLeftPanel, BorderLayout.PAGE_START);
-        add(scorecardPanel, BorderLayout.WEST);
+        add(topPanel, BorderLayout.PAGE_START);
+        add(scorecardPanel, BorderLayout.LINE_START);
         add(dicePanel, BorderLayout.CENTER);
-        add(bottomRightPanel, BorderLayout.LINE_END);
+        add(buttonPanel, BorderLayout.LINE_END);
+
         setBorder(BorderFactory.createEmptyBorder(BoardBorder, BoardBorder, BoardBorder, BoardBorder));
     }
 
-    public static void resetBoard() {
-        toggleScoreCard();
+    public static void reset() {
+        scorecardPanel.setVisible(false);
         dicePanel.setVisible(false);
         resetRollTrackerLabel();
         CurrentRoll.clear();
         for (DiceModel die : Dice) {
             die.reset();
         }
+    }
+
+    public static void prepareBoard() {
+        toggleScoreCard();
+        reset();
     }
 
     public static void toggleScoreCard() {
@@ -210,7 +236,7 @@ public class Board extends Panel {
     }
 
     public static void scoreMarkedListener() {
-        resetBoard();
+        prepareBoard();
         Yahtzee.NextTurn();
     }
 

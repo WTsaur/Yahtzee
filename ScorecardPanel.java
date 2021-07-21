@@ -32,7 +32,7 @@ public class ScorecardPanel extends JPanel {
         add("Lower Section Total");
         add("Grand Total");
     }};
-    private Scorecard ScoreData = null;
+    private static Scorecard ScoreData = null;
     private List<ScorecardRow> upperScoreRows = new ArrayList<ScorecardRow>();
     private List<ScorecardRow> lowerScoreRows = new ArrayList<ScorecardRow>();
     private ScorecardRow upperTotalRow;
@@ -205,6 +205,10 @@ public class ScorecardPanel extends JPanel {
 
         gbc.gridy++;
         add(rightPanel, gbc);
+    }
+
+    public static void reset() {
+        ScoreData = null;
     }
 
     public void setScorePanel(Scorecard scores) {

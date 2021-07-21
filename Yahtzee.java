@@ -3,6 +3,8 @@ package Yahtzee;
 import java.util.Vector;
 
 import java.awt.EventQueue;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -11,7 +13,7 @@ public class Yahtzee extends JFrame {
 
     private static Board board;
     private static Menu menu;
-    private static RestartScreen rs;
+    private static PauseScreen pauseScreen;
     private static int RoundCount;
     private static int RoundSize;
     private static int CurrentTurn;
@@ -31,17 +33,47 @@ public class Yahtzee extends JFrame {
     private void InitUI() {
         menu = new Menu(Constants.BACKGROUND_IMAGE_PATH);
         board = new Board(Constants.BACKGROUND_IMAGE_PATH);
-	rs = new RestartScreen(Constants.BACKGROUND_IMAGE_PATH);
+	    pauseScreen = new PauseScreen(Constants.BACKGROUND_IMAGE_PATH);
         board.setVisible(false);
-	rs.setVisible(false);
+	    pauseScreen.setVisible(false);
 
         getContentPane().add(board);
+        getContentPane().add(pauseScreen);
         getContentPane().add(menu);
-	getContentPane().add(rs);
         pack();
+
         setTitle(Constants.APP_NAME);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setLocationRelativeTo(null);
+        addWindowListener(new WindowListener() {
+
+            @Override
+            public void windowOpened(WindowEvent e) {}
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                if (menu.isVisible()) {
+                    Yahtzee.QuitGame(false);
+                } else {
+                    int doSave = JOptionPane.showConfirmDialog(getParent(), "Would you like to save your current game?"); 
+                if (doSave == JOptionPane.YES_OPTION) {
+                    Yahtzee.QuitGame(true);
+                } else if (doSave == JOptionPane.NO_OPTION) {
+                    Yahtzee.QuitGame(false);
+                }
+                }
+            }
+            @Override
+            public void windowClosed(WindowEvent e) {}
+            @Override
+            public void windowIconified(WindowEvent e) {}
+            @Override
+            public void windowDeiconified(WindowEvent e) {}
+            @Override
+            public void windowActivated(WindowEvent e) {}
+            @Override
+            public void windowDeactivated(WindowEvent e) {}
+        });
     }
     
     public static void StartGame(Vector<Player> players) {
@@ -54,6 +86,17 @@ public class Yahtzee extends JFrame {
         Player p = Players.get(CurrentTurn);
         board.setCurrentPlayer(p);
         displayPlayerTurnMessage(p.getName());
+    }
+
+    public static void RestartGame() {
+        togglePauseScreen();
+        Board.reset();
+        ScorecardPanel.reset();
+        Players.clear();
+        CurrentTurn = 0;
+        RoundSize = 0;
+        RoundCount = 0;
+        toggleMenuScreen();
     }
 
     public static void NextTurn() {
@@ -69,14 +112,32 @@ public class Yahtzee extends JFrame {
         }
     }
 
+    public static void toggleBoardScreen() {
+        board.setVisible(!board.isVisible());
+    }
+
+    public static void toggleMenuScreen() {
+        menu.setVisible(!menu.isVisible());
+    }
+
+    public static void togglePauseScreen() {
+        pauseScreen.setVisible(!pauseScreen.isVisible());
+    }
+
     public static void displayPlayerTurnMessage(String name) {
         String msg = name + ", it's your turn!";
         JOptionPane.showMessageDialog(null, msg, "", JOptionPane.INFORMATION_MESSAGE);
     }
 
+    public static void QuitGame(boolean doSave) {
+        if (doSave) {
+            //TODO: Save game data
+        }
+        System.exit(0);
+    }
+
     public static void EndGame() {
         //TODO: Display Score rankings and etc.
-	board.setVisible(false);
-	rs.setVisible(true);
+
     }
 }

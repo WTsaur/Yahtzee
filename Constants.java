@@ -11,5 +11,6 @@ public class Constants {
     public static final String DEFAULT_DICE = BASE_IMAGE_PATH + "Dice-1.png";
     public static final String ROLLBTN_IMAGE_PATH = BASE_IMAGE_PATH + "Die.png";
     public static final String SCORECARD_IMAGE_PATH = BASE_IMAGE_PATH + "Scorecard.png";
+    public static final String PAUSE_IMAGE_PATH = BASE_IMAGE_PATH + "Pause.png";
     public static final String SCORE_NULL = "-";
 }
