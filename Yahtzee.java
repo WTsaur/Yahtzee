@@ -1,69 +1,77 @@
 package Yahtzee;
 
-import java.awt.EventQueue;
-import java.net.URL;
-import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.Vector;
 
-import javax.swing.ImageIcon;
+import java.awt.EventQueue;
+
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 public class Yahtzee extends JFrame {
 
     private static Board board;
     private static Menu menu;
-    private static Image BgImage;
-    public static final int MAX_PLAYERS = 20;
-    public static final int MIN_PLAYERS = 2;
+    private static int RoundCount;
+    private static int RoundSize;
+    private static int CurrentTurn;
+    private static Vector<Player> Players;
 
     public Yahtzee() {
-        URL url = this.getClass().getResource("/Yahtzee/images/background-green.jpg");
-        BgImage = new ImageIcon(url).getImage();
-        initUI();
+        InitUI();
     }
 
-    private void initUI() {
-        menu = new Menu(BgImage);
-        menu.startButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String input = menu.TxtEntry.getText();
-                try {
-                    int num = Integer.parseInt(input);
-                    if (num > MAX_PLAYERS || num < MIN_PLAYERS) {
-                        menu.displayInputSizeErrorMessage();
-                    } else {
-                        menu.dismissErrorMessage();
-                        startGame(num);
-                    }
-                } catch (NumberFormatException err) {
-                    menu.displayInputTypeErrorMessage();
-                }
-            }
-        });
-        board = new Board(BgImage);
-        board.setVisible(false);
-        
-        getContentPane().add(board);
-        getContentPane().add(menu);
-        pack();
-        setTitle("Yahtzee");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
-    }
-    
-    private void startGame(int players) {
-        board.setVisible(true);
-        board.label.setText("" + players);
-        menu.setVisible(false);
-    }
-    
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             Yahtzee ex = new Yahtzee();
             ex.setVisible(true);
         });
+    }
+
+    private void InitUI() {
+        menu = new Menu(Constants.BACKGROUND_IMAGE_PATH);
+        board = new Board(Constants.BACKGROUND_IMAGE_PATH);
+        board.setVisible(false);
+
+        getContentPane().add(board);
+        getContentPane().add(menu);
+        pack();
+        setTitle(Constants.APP_NAME);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+    }
+    
+    public static void StartGame(Vector<Player> players) {
+        Players = players;
+        board.setVisible(true);
+        menu.setVisible(false);
+        CurrentTurn = 0;
+        RoundSize = players.size();
+        RoundCount = RoundSize * 13;
+        Player p = Players.get(CurrentTurn);
+        board.setCurrentPlayer(p);
+        displayPlayerTurnMessage(p.getName());
+    }
+
+    public static void NextTurn() {
+        if (--RoundCount < 0) {
+            EndGame();
+        } else {
+            if (++CurrentTurn >= RoundSize) {
+                CurrentTurn = 0;
+            }
+            Player p = Players.get(CurrentTurn);
+            board.setCurrentPlayer(p);
+            displayPlayerTurnMessage(p.getName());
+        }
+    }
+
+    public static void displayPlayerTurnMessage(String name) {
+        String msg = name + ", it's your turn!";
+        JOptionPane.showMessageDialog(null, msg, "", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public static void EndGame() {
+        // Display Score rankings and etc.
     }
     
     import javax.swing.JPanel;
