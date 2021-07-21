@@ -260,8 +260,10 @@ public class Yahtzee extends JFrame {
                 break;
             case 10: // Small Straight
                 Arrays.sort(rolls);
-                if ((++rolls[0] == rolls[1] && ++rolls[1] == rolls[2] && ++rolls[2] == rolls[3]) ||
-                    (++rolls[1] == rolls[2] && ++rolls[2] == rolls[3] && ++rolls[3] == rolls[4]))
+                if ((++rolls[0] == rolls[1] && ++rolls[1] == rolls[2] && ++rolls[2] == rolls[3]) || /* all but 5th */
+                    (++rolls[1] == rolls[2] && ++rolls[2] == rolls[3] && ++rolls[3] == rolls[4]) || /* all but 1st */
+					(++rolls[0] == rolls[2] && ++rolls[2] == rolls[3] && ++rolls[3] == rolls[4]) || /* all but 2nd */
+					(++rolls[0] == rolls[1] && ++rolls[1] == rolls[2] && ++rolls[2] == rolls[4]))   /* all but 4th */
                 {
                     isValid = true;
                 }
