@@ -1,4 +1,4 @@
-# Yahtzee
+# [Yahtzee](https://github.com/WTsaur/Yahtzee)
 
 ## Compiling and Running
 *Note: Ensure you have the latest version of Java installed* 
