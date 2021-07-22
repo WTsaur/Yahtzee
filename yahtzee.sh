@@ -1,9 +1,10 @@
 #!/bin/bash
 # Program name
-program=Yahtzee
+folder=Yahtzee
+program=hwx
 
 rm *.class
 javac *.java
 cd ..
-jar cmvf $program/Manifest.txt $program.jar $program/*.class $program/*.java $program/images $program/README.md
+jar cmvf $folder/Manifest.txt $program.jar $folder/*.class $folder/*.java $folder/images $folder/README.md
 java -jar $program.jar
