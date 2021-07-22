@@ -10,7 +10,12 @@
 
 ## Credits
 ### Iris Pounsberry
-- 
+- Authored the project wiki
+- Drafted ScorecardPanel's scoring logic
+- GameData.java
+- SaveGame logic
+- LoadGame logic
+- EndGame logic
 ### Lucas Zavalia
 - 
 ### William Tsaur
