@@ -1,223 +1,91 @@
-import javax.swing.JPanel;
+package Yahtzee;
 
-import java.util.Arrays;
-import java.utils.Array;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class Scorecard extends JPanel {
+public class Scorecard {
 
-	/**
-	 * Create the panel.
-	 */
-	public Scorecard(String Player) {
-		String playerName = Player;
-		final String[] typeLabels = 	{"none", 	"Aces", 	"Twos", 	"Threes", 	"Fours", 	"Fives", 	"Sixes", 	"3 of a Kind", 	"4 of a Kind", 	"Full House", 	"Small Straight", 	"Large Straight", 	"Chance", 	"Yahtzee", 	"Bonus Yahtzees!"};
-		String[] scores = 				{"0",		"-",		"-",		"-",		"-",		"-",		"-",		"-",			"-",			"-",			"-",				"-",				"-",		"-",		"0"};
-	}
-	
-	public int calcEntry(int type, int rolls[])
-	{
-		int runningScore = 0;
-		
-		switch(type)
-		{
-		case 1:
-			for(int i = 0; i<5; i++)
-			{
-				if(rolls[i] == 1)
-				{
-					runningScore++;
-				}
-			}
-			break;
-		case 2:
-			for(int i = 0; i<5; i++)
-			{
-				if(rolls[i] == 2)
-				{
-					runningScore += 2;
-				}
-			}
-			break;
-		case 3:
-			for(int i = 0; i<5; i++)
-			{
-				if(rolls[i] == 3)
-				{
-					runningScore += 3;
-				}
-			}
-			break;
-		case 4:
-			for(int i = 0; i<5; i++)
-			{
-				if(rolls[i] == 4)
-				{
-					runningScore += 4;
-				}
-			}
-			break;
-		case 5:
-			for(int i = 0; i<5; i++)
-			{
-				if(rolls[i] == 5)
-				{
-					runningScore += 5;
-				}
-			}
-			break;
-		case 6:
-			for(int i = 0; i<5; i++)
-			{
-				if(rolls[i] == 6)
-				{
-					runningScore += 6;
-				}
-			}
-			break;
-		case 7: // 3 of a Kind
-			for(int i = 0; i<5; i++)
-			{
-				runningScore += rolls[i];
-			}
-			break;
-		case 8: // 4 of a Kind
-			for(int i = 0; i<5; i++)
-			{
-				runningScore += rolls[i];
-			}
-			break;
-		case 9: // Full House
-			runningScore = 25;
-		case 10: // Small Straight
-			runningScore = 30;
-		case 11: // Large Straight
-			runningScore = 40;
-		case 12: // Chance
-			for(int i = 0; i<5; i++)
-			{
-				runningScore += rolls[i];
-			}
-			break;
-		case 13: // Yahtzee
-			runningScore = 50;
-		default:
-			break;
-		}
-		return runningScore;
-	}
-	
-	public boolean validChoice(int type, int rolls[])
-	{
-		boolean isValid = false;
-		switch (type)
-		{
-		case 1:
-			for (int i = 0; i < 5; i++)
-			{
-				if (rolls[i] == 1)
-				{
-					isValid = true;
-				}
-			}
-			break;
-		case 2:
-			for (int i = 0; i < 5; i++)
-			{
-				if (rolls[i] == 2)
-				{
-					isValid = true;
-				}
-			}
-			break;
-		case 3:
-			for (int i = 0; i < 5; i++)
-			{
-				if (rolls[i] == 3)
-				{
-					isValid = true;
-				}
-			}
-			break;
-		case 4:
-			for (int i = 0; i < 5; i++)
-			{
-				if (rolls[i] == 4)
-				{
-					isValid = true;
-				}
-			}
-			break;
-		case 5:
-			for (int i = 0; i < 5; i++)
-			{
-				if (rolls[i] == 5)
-				{
-					isValid = true;
-				}
-			}
-			break;
-		case 6:
-			for (int i = 0; i < 5; i++)
-			{
-				if (rolls[i] == 6)
-				{
-					isValid = true;
-				}
-			}
-			break;
-		case 7: // 3 of a Kind
-			Arrays.sort(rolls);
-			if ((rolls[0] == rolls[1] && rolls[0] == rolls[2]) ||
-				(rolls[1] == rolls[2] && rolls[1] == rolls[3]) ||
-				(rolls[2] == rolls[3] && rolls[2] == rolls[4]))
-			{
-				isValid = true;
-			}
-			break;
-		case 8: // 4 of a Kind
-			Arrays.sort(rolls);
-			if ((rolls[0] == rolls[1] && rolls[0] == rolls[2] && rolls[0] == rolls[3]) ||
-				(rolls[1] == rolls[2] && rolls[1] == rolls[3] && rolls[1] == rolls[4]))
-			{
-				isValid = true;
-			}
-			break;
-		case 9: // Full House
-			Arrays.sort(rolls);
-			if (((rolls[0] == rolls[1] && rolls[0] == rolls[2]) && (rolls[3] == rolls[4])) ||
-				((rolls[2] == rolls[3] && rolls[2] == rolls[4])  && (rolls[0] == rolls[1])))
-				{
-					isValid = true;
-				}
-			break;
-		case 10: // Small Straight
-			Arrays.sort(rolls);
-			if ((++rolls[0] == rolls[1] && ++rolls[1] == rolls[2] && ++rolls[2] == rolls[3]) ||
-				(++rolls[1] == rolls[2] && ++rolls[2] == rolls[3] && ++rolls[3] == rolls[4]))
-			{
-				isValid = true;
-			}
-			break;
-		case 11: // Large Straight
-			Arrays.sort(rolls);
-			if (++rolls[0] == rolls[1] && ++rolls[1] == rolls[2] && ++rolls[2] == rolls[3] && ++rolls[3] == rolls[4])
-			{
-				isValid = true;
-			}
-			break;
-		case 12: // Chance
-			isValid = true;
-			break;
-		case 13: // Yahtzee
-			if (rolls[0] == rolls[1] && rolls[0] == rolls[2] && rolls[0] == rolls[3] && rolls[0] == rolls[4])
-			{
-				isValid = true;
-			}
-			break;
-		default:
-			break;
-		}
-		return isValid;
-	}
+    public static List<String> UpperSectionLabels = new ArrayList<String>(){{
+        add("Aces");
+        add("Twos");
+        add("Threes");
+        add("Fours");
+        add("Fives");
+        add("Sixes");
+    }};
 
+    public static List<String> LowerSectionLabels = new ArrayList<String>() {{
+        add("3 of a kind");
+        add("4 of a kind");
+        add("Full House");
+        add("Small Straight");
+        add("Large Straight");
+        add("Chance");
+        add("Yahtzee");
+        add("Yahtzee Bonus");
+    }};
+
+    private Map<String, Integer> Scores = new HashMap<String, Integer>();
+    private int LowerSectionTotal;
+    private int UpperSectionTotal;
+    private int Total;
+    private int UpperBonus;
+
+    public Scorecard() {
+        for (String label : UpperSectionLabels) {
+            Scores.put(label, -1);
+        }
+        for (String label : LowerSectionLabels) {
+            Scores.put(label, -1);
+        }
+        LowerSectionTotal = 0;
+        UpperSectionTotal = 0;
+        Total = 0;
+        UpperBonus = 0;
+    }
+
+    public int getTotal() {
+        return Total;
+    }
+
+    public int getUpperBonus() {
+        return UpperBonus;
+    }
+
+    public int getLowerTotal() {
+        return LowerSectionTotal;
+    }
+
+    public int getUpperTotal() {
+        return UpperSectionTotal;
+    }
+
+    public int getGrandTotal() {
+        return LowerSectionTotal + UpperSectionTotal;
+    }
+
+    public void insertScore(String label, int val) {
+        if (UpperSectionLabels.contains(label)) {
+            Scores.put(label, val);
+            UpperSectionTotal += val;
+            Total += val;
+            if (Total >= 63) {
+                UpperSectionTotal += 35;
+                UpperBonus = 35;
+            }
+        } else {
+            if (label.equals("Bonus Yahtzee")) {
+                Scores.put(label, val + Scores.get(label));
+            } else {
+                Scores.put(label, val);
+            }
+            LowerSectionTotal += val;
+        }
+    }
+
+    public int getScore(String label) {
+        return Scores.get(label);
+    }
 }

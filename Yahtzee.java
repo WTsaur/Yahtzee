@@ -1,69 +1,145 @@
 package Yahtzee;
 
-import java.awt.EventQueue;
-import java.net.URL;
-import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.Vector;
 
-import javax.swing.ImageIcon;
+import java.awt.EventQueue;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 public class Yahtzee extends JFrame {
 
     private static Board board;
     private static Menu menu;
-    private static Image BgImage;
-    public static final int MAX_PLAYERS = 20;
-    public static final int MIN_PLAYERS = 2;
+    private static PauseScreen pauseScreen;
+    private static int RoundCount;
+    private static int RoundSize;
+    private static int CurrentTurn;
+    private static Vector<Player> Players;
 
     public Yahtzee() {
-        URL url = this.getClass().getResource("/Yahtzee/images/background-green.jpg");
-        BgImage = new ImageIcon(url).getImage();
-        initUI();
+        InitUI();
     }
 
-    private void initUI() {
-        menu = new Menu(BgImage);
-        menu.startButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String input = menu.TxtEntry.getText();	
-                try {
-                    int num = Integer.parseInt(input);					// num = number of players
-                    if (num > MAX_PLAYERS || num < MIN_PLAYERS) {
-                        menu.displayInputSizeErrorMessage();
-                    } else {
-                        menu.dismissErrorMessage();
-                        startGame(num);									// transitions from menu to game board
-                    }
-                } catch (NumberFormatException err) {
-                    menu.displayInputTypeErrorMessage();
-                }
-            }
-        });
-        board = new Board(BgImage);
-        board.setVisible(false);
-        
-        getContentPane().add(board);
-        getContentPane().add(menu);
-        pack();
-        setTitle("Yahtzee");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
-    }
-    
-    private void startGame(int players) {
-        board.setVisible(true);
-        board.label.setText("" + players);
-        menu.setVisible(false);
-    }
-    
+
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             Yahtzee ex = new Yahtzee();
             ex.setVisible(true);
         });
+    }
+
+    private void InitUI() {
+        menu = new Menu(Constants.BACKGROUND_IMAGE_PATH);
+        board = new Board(Constants.BACKGROUND_IMAGE_PATH);
+	    pauseScreen = new PauseScreen(Constants.BACKGROUND_IMAGE_PATH);
+        board.setVisible(false);
+	    pauseScreen.setVisible(false);
+
+        getContentPane().add(board);
+        getContentPane().add(pauseScreen);
+        getContentPane().add(menu);
+        pack();
+
+        setTitle(Constants.APP_NAME);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        setLocationRelativeTo(null);
+        addWindowListener(new WindowListener() {
+
+            @Override
+            public void windowOpened(WindowEvent e) {}
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                if (menu.isVisible()) {
+                    Yahtzee.QuitGame(false);
+                } else {
+                    int doSave = JOptionPane.showConfirmDialog(getParent(), "Would you like to save your current game?"); 
+                if (doSave == JOptionPane.YES_OPTION) {
+                    Yahtzee.QuitGame(true);
+                } else if (doSave == JOptionPane.NO_OPTION) {
+                    Yahtzee.QuitGame(false);
+                }
+                }
+            }
+            @Override
+            public void windowClosed(WindowEvent e) {}
+            @Override
+            public void windowIconified(WindowEvent e) {}
+            @Override
+            public void windowDeiconified(WindowEvent e) {}
+            @Override
+            public void windowActivated(WindowEvent e) {}
+            @Override
+            public void windowDeactivated(WindowEvent e) {}
+        });
+    }
+    
+    public static void StartGame(Vector<Player> players) {
+        Players = players;
+        board.setVisible(true);
+        menu.setVisible(false);
+        CurrentTurn = 0;
+        RoundSize = players.size();
+        RoundCount = RoundSize * 13;
+        Player p = Players.get(CurrentTurn);
+        board.setCurrentPlayer(p);
+        displayPlayerTurnMessage(p.getName());
+    }
+
+    public static void RestartGame() {
+        togglePauseScreen();
+        Board.reset();
+        ScorecardPanel.reset();
+        Players.clear();
+        CurrentTurn = 0;
+        RoundSize = 0;
+        RoundCount = 0;
+        toggleMenuScreen();
+    }
+
+    public static void NextTurn() {
+        if (--RoundCount <= 0) {
+            EndGame();
+        } else {
+            if (++CurrentTurn >= RoundSize) {
+                CurrentTurn = 0;
+            }
+            Player p = Players.get(CurrentTurn);
+            board.setCurrentPlayer(p);
+            displayPlayerTurnMessage(p.getName());
+        }
+    }
+
+    public static void toggleBoardScreen() {
+        board.setVisible(!board.isVisible());
+    }
+
+    public static void toggleMenuScreen() {
+        menu.setVisible(!menu.isVisible());
+    }
+
+    public static void togglePauseScreen() {
+        pauseScreen.setVisible(!pauseScreen.isVisible());
+    }
+
+    public static void displayPlayerTurnMessage(String name) {
+        String msg = name + ", it's your turn!";
+        JOptionPane.showMessageDialog(null, msg, "", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public static void QuitGame(boolean doSave) {
+        if (doSave) {
+            //TODO: Save game data
+        }
+        System.exit(0);
+    }
+
+    public static void EndGame() {
+        //TODO: Display Score rankings and etc.
+
     }
     
     import javax.swing.JPanel;
