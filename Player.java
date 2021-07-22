@@ -1,6 +1,6 @@
 package Yahtzee;
 
-public class Player {
+public class Player implements Serializable {
     private String name;
     private Scorecard scorecard;
 

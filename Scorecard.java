@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Scorecard {
+public class Scorecard implements Serializable {
 
     public static List<String> UpperSectionLabels = new ArrayList<String>(){{
         add("Aces");
