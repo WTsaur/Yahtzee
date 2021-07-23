@@ -179,7 +179,7 @@ public class Yahtzee extends JFrame {
 		objectOutputStream.close();
 	}
 
-    public FileInputStream checkSavedGameExists() throws FileNotFoundException {
+    public static FileInputStream checkSavedGameExists() throws FileNotFoundException {
         return new FileInputStream(Constants.GAME_DATA_FILE);
     }
 
@@ -194,5 +194,13 @@ public class Yahtzee extends JFrame {
         Collections.sort(gameData.getPlayerList());
 
 		//TODO: display list of players on a panel
+
+        /* If game was saved, resumed at a later time and then completed, then delete save file. */
+        Path path = FileSystems.getDefault().getPath(Constants.GAME_DATA_FILE);
+        try {
+            Files.deleteIfExists(path);
+        } catch (IOException e) {
+            /* Game was not previously saved. No need to delete. */
+        }
     }
 }
