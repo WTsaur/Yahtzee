@@ -161,7 +161,7 @@ public class Yahtzee extends JFrame {
 
     public static void QuitGame(boolean doSave) {
         if (doSave) {
-			//saves game data to savedGame.txt
+			/* saves game data to savedGame.txt */
             try {
                 saveCurrentGame();
             } catch (IOException e) {
