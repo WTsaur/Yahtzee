@@ -1,5 +1,7 @@
 package Yahtzee;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Vector;
 
 import java.awt.EventQueue;
@@ -188,13 +190,9 @@ public class Yahtzee extends JFrame {
 	}
 
     public static void EndGame() {
-        //TODO: Display Score rankings and etc.
-        // Map<String, Integer> endGame = new HashMap<String, Integer>();
-		// for (Map.Entry<String, Integer> entry : endGame.entrySet())  //forEach entry in the HashMap...
-		// {
-		// 	endGame.put(Players.getName(), Players.scorecard.getGrandTotal()); //set the player name and grand total in this HashMap
-		// }
+        /* Sort Players (players implements comparable so that players are sorted by scorecard grand totals) */
+        Collections.sort(gameData.getPlayerList());
 
-		//TODO: put endGame on a popup window
+		//TODO: display list of players on a panel
     }
 }

@@ -2,7 +2,7 @@ package Yahtzee;
 
 import java.io.Serializable;
 
-public class Player implements Serializable {
+public class Player implements Serializable, Comparable<Player> {
     private String name;
     private Scorecard scorecard;
 
@@ -26,5 +26,10 @@ public class Player implements Serializable {
     @Override
     public String toString() {
         return name;
+    }
+
+    @Override
+    public int compareTo(Player o) {
+        return this.scorecard.getGrandTotal() - o.scorecard.getGrandTotal();
     }
 }
