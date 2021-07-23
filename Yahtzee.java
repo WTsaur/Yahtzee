@@ -1,21 +1,22 @@
 package Yahtzee;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Vector;
 
-import java.awt.EventQueue;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
+import java.awt.EventQueue;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -44,10 +45,9 @@ public class Yahtzee extends JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
         addWindowListener(new WindowListener() {
-
             @Override
             public void windowOpened(WindowEvent e) {}
-
+            /* in case user does not quit through the pause menu while playing a game */
             @Override
             public void windowClosing(WindowEvent e) {
                 if (menu.isVisible()) {

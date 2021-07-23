@@ -14,9 +14,9 @@ import javax.swing.JButton;
 import javax.swing.border.LineBorder;
 
 public class DiceModel extends JButton {
+   private static final int SCALE_VALUE = 170;
    private int value = 1;
    private boolean selected = false;
-   private final int SCALE_VALUE = 170;
 
    public DiceModel() {
       URL url = this.getClass().getResource(Constants.DEFAULT_DICE);
@@ -48,6 +48,7 @@ public class DiceModel extends JButton {
    }
 
    public int roll() {
+      /* generates random number and sets dice icon to correct png */
       Random rand = new Random();
       value = rand.nextInt(6) + 1;
       URL url = this.getClass().getResource(Constants.BASE_IMAGE_PATH + "Dice-" + value + ".png");

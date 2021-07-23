@@ -27,16 +27,16 @@ import javax.swing.JPanel;
 import javax.swing.plaf.DimensionUIResource;
 
 public class Board extends Panel {
+    private static final int BTN_SCALE_VAL = 50;
     private static ScorecardPanel scorecardPanel;
     private static JPanel dicePanel;
-    private JLabel currentPlayerLabel;
+    private static JLabel currentPlayerLabel;
     private static JLabel rollTrackerLabel;
     private static JButton rollButton;
     private static List<DiceModel> Dice = new ArrayList<>();
     private static List<Integer> CurrentRoll = new ArrayList<Integer>();
-    private final int BoardBorder = 20;
+    private static final int BOARD_BORDER_SIZE = 20;
     private static Player CurrentPlayer = new Player("");
-    private int BTN_SCALE_VAL = 50;
     private static int rollCount = 0;
     private static boolean rollHasChanged = false;
 
@@ -53,13 +53,13 @@ public class Board extends Panel {
         rollTrackerLabel.setFont(new Font("Sansserif", Font.PLAIN, 24));
         rollTrackerLabel.setForeground(Color.WHITE);
 
-        // Create Dice and add to List
+        /* Create Dice and add to List */
         for (int i = 0; i < 5; ++i) {
             DiceModel die = new DiceModel();
             Dice.add(die);
         }
 
-        // create pause button
+        /* create pause button */
         URL urlPE = this.getClass().getResource(Constants.PAUSE_IMAGE_PATH);
         Image imgPE = new ImageIcon(urlPE).getImage().getScaledInstance(BTN_SCALE_VAL, BTN_SCALE_VAL, Image.SCALE_DEFAULT);
         ImageIcon peIcon = new ImageIcon(imgPE);
@@ -72,7 +72,7 @@ public class Board extends Panel {
             }
         });
 
-        // create score card button and label
+        /* create score card button and label */
         JLabel scoreLabel = new JLabel("Score Card");
         scoreLabel.setFont(new Font("Sansserif", Font.PLAIN, 18));
         scoreLabel.setForeground(Color.WHITE);
@@ -88,7 +88,7 @@ public class Board extends Panel {
             }
         });
 
-        // create roll dice button and label
+        /* create roll dice button and label */
         JLabel rollLabel = new JLabel("Roll Dice");
         rollLabel.setFont(new Font("Sansserif", Font.PLAIN, 18));
         rollLabel.setForeground(Color.WHITE);
@@ -104,7 +104,7 @@ public class Board extends Panel {
             }
         });
 
-        // JPanel for Player name and roll tracker
+        /* JPanel for Player name and roll tracker */
         JPanel labelPanel = new JPanel();
         labelPanel.setLayout(new BoxLayout(labelPanel, BoxLayout.PAGE_AXIS));
         labelPanel.setOpaque(false);
@@ -112,14 +112,14 @@ public class Board extends Panel {
         labelPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         labelPanel.add(rollTrackerLabel);
 
-        // JPanel for labelPanel and pause button
+        /* JPanel for labelPanel and pause button */
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BorderLayout());
         topPanel.setOpaque(false);
         topPanel.add(labelPanel, BorderLayout.LINE_START);
         topPanel.add(pauseButton, BorderLayout.LINE_END);
 
-        // JPanel for Dice
+        /* Creating JPanel + components for showing Dice */
         JPanel diceInnerTopPanel = new JPanel(new FlowLayout());
         diceInnerTopPanel.setOpaque(false);
         diceInnerTopPanel.add(Dice.get(0));
@@ -142,7 +142,7 @@ public class Board extends Panel {
         gbc.gridy = 1;
         dicePanel.add(diceInnerBottomPanel, gbc);
 
-        // JPanel for dice roll and score card buttons/labels
+        /* JPanel for dice roll and scorecard buttons/labels */
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridBagLayout());
         buttonPanel.setOpaque(false);
@@ -161,13 +161,13 @@ public class Board extends Panel {
         scorecardPanel = new ScorecardPanel();
         scorecardPanel.setVisible(false);
 
-        //add all components to board
+        /* add all components to board */
         add(topPanel, BorderLayout.PAGE_START);
         add(scorecardPanel, BorderLayout.LINE_START);
         add(dicePanel, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.LINE_END);
 
-        setBorder(BorderFactory.createEmptyBorder(BoardBorder, BoardBorder, BoardBorder, BoardBorder));
+        setBorder(BorderFactory.createEmptyBorder(BOARD_BORDER_SIZE, BOARD_BORDER_SIZE, BOARD_BORDER_SIZE, BOARD_BORDER_SIZE));
     }
 
     public static void reset() {
@@ -220,11 +220,13 @@ public class Board extends Panel {
             if (!dicePanel.isVisible()) {
                 dicePanel.setVisible(true);
             }
+            /* rolling all dice */
             for (DiceModel die : Dice) {
                 if (!die.isSelected()) {
                     die.roll();
                 }
             }
+            /* Updating current roll data */
             CurrentRoll.clear();
             for (DiceModel die : Dice) {
                 CurrentRoll.add(die.getValue());

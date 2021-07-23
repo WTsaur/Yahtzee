@@ -15,7 +15,7 @@
 ## How To Play The Game!
 ### The Menu
 > Add players by typing a player name into the text box and clicking `Add Player` or by hitting the `enter` key.
-> Remove all players from the list with the `Clear Players` button.
+> Remove players by clicking on their name or remove all players from the list with the `Clear Players` button.
 > Make sure you have at least 2 players (maximum of 10) and then hit the `Start Game` button to begin playing!
 
 ![Yahtzee Menu](https://github.com/WTsaur/Yahtzee/blob/main/images/menu.png)

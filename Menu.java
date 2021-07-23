@@ -56,6 +56,7 @@ public class Menu extends Panel {
         PlayerList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         PlayerList.setLayoutOrientation(JList.VERTICAL);
         PlayerList.addListSelectionListener(new ListSelectionListener(){
+            /* Allows users to remove players from the list by clicking on the name of the player */
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 if (!e.getValueIsAdjusting()) {
@@ -77,6 +78,7 @@ public class Menu extends Panel {
 
         TxtEntry = new JTextField(15);
         TxtEntry.addKeyListener(new KeyListener() {
+            /* listener allows users to press enter to add players instead of via the add button */
             private boolean enterKeyPressed = false;
 
             @Override
