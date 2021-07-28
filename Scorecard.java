@@ -5,6 +5,8 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import java.lang.StringBuilder;
+
 public class Scorecard implements Serializable {
     private Map<String, Integer> Scores = new HashMap<String, Integer>();
     private int LowerSectionTotal;
@@ -67,4 +69,18 @@ public class Scorecard implements Serializable {
     public int getScore(String label) {
         return Scores.get(label);
     }
+
+    public String toString() {
+       StringBuilder sb = new StringBuilder();
+       sb.append("Total: ");
+       sb.append(Total);
+       sb.append(" Upper Section: ");
+       sb.append(UpperSectionTotal);
+       sb.append(" Lower Section: ");
+       sb.append(LowerSectionTotal);
+       sb.append(" Upper Bonus: ");
+       sb.append(UpperBonus);
+       return sb.toString();
+    }
+
 }

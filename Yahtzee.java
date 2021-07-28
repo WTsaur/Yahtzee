@@ -26,6 +26,7 @@ public class Yahtzee extends JFrame {
     private static Board board;
     private static Menu menu;
     private static PauseScreen pauseScreen;
+    private static EndgameScreen endgameScreen;
     private static GameData gameData;
 
     public Yahtzee() {
@@ -75,13 +76,16 @@ public class Yahtzee extends JFrame {
         
         menu = new Menu(Constants.BACKGROUND_IMAGE_PATH);
         board = new Board(Constants.BACKGROUND_IMAGE_PATH);
-	    pauseScreen = new PauseScreen(Constants.BACKGROUND_IMAGE_PATH);
+	pauseScreen = new PauseScreen(Constants.BACKGROUND_IMAGE_PATH);
+	endgameScreen = new EndgameScreen(Constants.BACKGROUND_IMAGE_PATH);
         board.setVisible(false);
-	    pauseScreen.setVisible(false);
+	pauseScreen.setVisible(false);
+	endgameScreen.setVisible(false);
 
         getContentPane().add(board);
         getContentPane().add(pauseScreen);
         getContentPane().add(menu);
+	getContentPane().add(endgameScreen);
         pack();
 
         try {
@@ -150,6 +154,10 @@ public class Yahtzee extends JFrame {
         pauseScreen.setVisible(!pauseScreen.isVisible());
     }
 
+    public static void toggleEndgameScreen() {
+	endgameScreen.setVisible(!endgameScreen.isVisible());
+    }
+
     public static void displayPlayerTurnMessage(String name) {
         String msg = name + ", it's your turn!";
         JOptionPane.showMessageDialog(null, msg, "", JOptionPane.INFORMATION_MESSAGE);
@@ -191,7 +199,7 @@ public class Yahtzee extends JFrame {
 
     public static void EndGame() {
         /* Sort Players (players implements comparable so that players are sorted by scorecard grand totals) */
-        Collections.sort(gameData.getPlayerList());
+        //Collections.sort(gameData.getPlayerList());
 
 		//TODO: display list of players on a panel
 
@@ -202,5 +210,7 @@ public class Yahtzee extends JFrame {
         } catch (IOException e) {
             /* Game was not previously saved. No need to delete. */
         }
+	board.setVisible(false);
+	endgameScreen.setVisible(true);
     }
 }
