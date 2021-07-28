@@ -47,14 +47,19 @@ public class DiceModel extends JButton {
       return value;
    }
 
-   public int roll() {
-      /* generates random number and sets dice icon to correct png */
-      Random rand = new Random();
-      value = rand.nextInt(6) + 1;
+   public void setDice(int val) {
+      value = val;
       URL url = this.getClass().getResource(Constants.BASE_IMAGE_PATH + "Dice-" + value + ".png");
       Image img = new ImageIcon(url).getImage().getScaledInstance(SCALE_VALUE, SCALE_VALUE, Image.SCALE_DEFAULT);
       ImageIcon newIcon = new ImageIcon(img);
       setIcon(newIcon);
+   }
+
+   public int roll() {
+      /* generates random number and sets dice icon to correct png */
+      Random rand = new Random();
+      value = rand.nextInt(6) + 1;
+      setDice(value);
       return value;
    }
 }

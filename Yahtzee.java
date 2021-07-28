@@ -26,6 +26,7 @@ public class Yahtzee extends JFrame {
     private static Board board;
     private static Menu menu;
     private static PauseScreen pauseScreen;
+    private static EndgameScreen endgameScreen;
     private static GameData gameData;
 
     public Yahtzee() {
@@ -76,11 +77,14 @@ public class Yahtzee extends JFrame {
         menu = new Menu(Constants.BACKGROUND_IMAGE_PATH);
         board = new Board(Constants.BACKGROUND_IMAGE_PATH);
 	    pauseScreen = new PauseScreen(Constants.BACKGROUND_IMAGE_PATH);
+        endgameScreen = new EndgameScreen(Constants.BACKGROUND_IMAGE_PATH);
         board.setVisible(false);
 	    pauseScreen.setVisible(false);
+        endgameScreen.setVisible(false);
 
         getContentPane().add(board);
         getContentPane().add(pauseScreen);
+        getContentPane().add(endgameScreen);
         getContentPane().add(menu);
         pack();
 
@@ -91,44 +95,48 @@ public class Yahtzee extends JFrame {
             if (doLoad == JOptionPane.YES_OPTION) {
                try {
                 loadSavedGame(savedGameStream);
-                StartGame(gameData.getPlayerList());
+                StartGame();
                 } catch (ClassNotFoundException | IOException e1) {
                     displayGameLoadError();
                 }
             } else if (doLoad == JOptionPane.NO_OPTION) {
                /* User wishes to not load saved game. 
                   Delete saved game. */
-                Path path = FileSystems.getDefault().getPath(Constants.GAME_DATA_FILE);
-                try {
-                    Files.delete(path);
-                } catch (IOException e1) {
-                    /* file deletion failed */
-                }
+                deleteSaveFile();
             }
         } catch (FileNotFoundException e1) {
             /* No saved data to load */
         }
     }
-    
-    public static void StartGame(Vector<Player> players) {
-        gameData = new GameData(players);
+
+    /* make appropriate panels visible and setup board using game data */
+    public static void StartGame() {
         board.setVisible(true);
         menu.setVisible(false);
         Player p = gameData.getCurrentPlayer();
         board.setCurrentPlayer(p);
+        board.setRollData(gameData.getRollsMade(), gameData.getCurrentRoll());
         displayPlayerTurnMessage(p.getName());
+    }
+    
+    /* create new game data with new players and start game */
+    public static void StartGame(Vector<Player> players) {
+        gameData = new GameData(players);
+        StartGame();
     }
 
     public static void RestartGame() {
-        togglePauseScreen();
+        endgameScreen.setVisible(false);
+        pauseScreen.setVisible(false);
         Board.reset();
         ScorecardPanel.reset();
         gameData.reset();
-        toggleMenuScreen();
+        menu.setVisible(true);
+        deleteSaveFile();
     }
 
     public static void NextTurn() {
-        if (gameData.getRoundCount() > 0) {
+        if (gameData.getRoundCount() >= 0) {
             gameData.increaseTurnIdx();
             Player p = gameData.getCurrentPlayer();
             board.setCurrentPlayer(p);
@@ -138,40 +146,42 @@ public class Yahtzee extends JFrame {
         }
     }
 
-    public static void toggleBoardScreen() {
-        board.setVisible(!board.isVisible());
+    private static void deleteSaveFile() {
+        Path path = FileSystems.getDefault().getPath(Constants.GAME_DATA_FILE);
+        try {
+            Files.delete(path);
+        } catch (IOException e1) {
+            /* file deletion failed or file does not exist */
+        }
     }
 
-    public static void toggleMenuScreen() {
-        menu.setVisible(!menu.isVisible());
-    }
-
-    public static void togglePauseScreen() {
-        pauseScreen.setVisible(!pauseScreen.isVisible());
-    }
-
-    public static void displayPlayerTurnMessage(String name) {
+    private static void displayPlayerTurnMessage(String name) {
         String msg = name + ", it's your turn!";
         JOptionPane.showMessageDialog(null, msg, "", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    public static void displayGameLoadError() {
+    private static void displayGameLoadError() {
         JOptionPane.showMessageDialog(null, "Uh Oh! There was an error loading your game!", "", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public static void QuitGame(boolean doSave) {
         if (doSave) {
+            /* save current roll data to GameData object */
+            gameData.setRollData(board.getRollsMade(), board.getRoll());
 			/* saves game data to savedGame.txt */
             try {
                 saveCurrentGame();
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(null, "Uh Oh! There was an error saving your game!", "", JOptionPane.INFORMATION_MESSAGE);
             }
+        } else {
+            /* User does not wish to save current game. Delete save file. */
+            deleteSaveFile();
         }
         System.exit(0);
     }
 
-    public static void saveCurrentGame() throws IOException {
+    private static void saveCurrentGame() throws IOException {
 		FileOutputStream fileOutputStream = new FileOutputStream(Constants.GAME_DATA_FILE);
 		ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
 		objectOutputStream.writeObject(gameData);
@@ -179,21 +189,22 @@ public class Yahtzee extends JFrame {
 		objectOutputStream.close();
 	}
 
-    public static FileInputStream checkSavedGameExists() throws FileNotFoundException {
+    private static FileInputStream checkSavedGameExists() throws FileNotFoundException {
         return new FileInputStream(Constants.GAME_DATA_FILE);
     }
 
-    public void loadSavedGame(FileInputStream fIS) throws IOException, ClassNotFoundException {
+    private void loadSavedGame(FileInputStream fIS) throws IOException, ClassNotFoundException {
         ObjectInputStream objectInputStream = new ObjectInputStream(fIS);
 		gameData = (GameData) objectInputStream.readObject();
 		objectInputStream.close();
 	}
 
-    public static void EndGame() {
+    private static void EndGame() {
         /* Sort Players (players implements comparable so that players are sorted by scorecard grand totals) */
         Collections.sort(gameData.getPlayerList());
-
-		//TODO: display list of players on a panel
+        endgameScreen.setRankings(gameData.getPlayerList());
+        board.setVisible(false);
+	    endgameScreen.setVisible(true);
 
         /* If game was saved, resumed at a later time and then completed, then delete save file. */
         Path path = FileSystems.getDefault().getPath(Constants.GAME_DATA_FILE);
@@ -202,5 +213,13 @@ public class Yahtzee extends JFrame {
         } catch (IOException e) {
             /* Game was not previously saved. No need to delete. */
         }
+    }
+
+    public static void toggleBoardScreen() {
+        board.setVisible(!board.isVisible());
+    }
+
+    public static void togglePauseScreen() {
+        pauseScreen.setVisible(!pauseScreen.isVisible());
     }
 }

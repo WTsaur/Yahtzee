@@ -100,7 +100,7 @@ public class Board extends Panel {
         rollButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                rollDice();   
+                rollDice();
             }
         });
 
@@ -254,6 +254,30 @@ public class Board extends Panel {
         currentPlayerLabel.setText(player.getName());
         CurrentPlayer = player;
         scorecardPanel.setScorePanel(CurrentPlayer.getScorecard());
+    }
+
+    public void setRollData(int rollsMade, List<Integer> diceRoll) {
+        rollCount = rollsMade;
+        updateRollTrackerLabel();
+        for (int i = 0; i < diceRoll.size(); ++i) {
+            Dice.get(i).setDice(diceRoll.get(i));
+        }
+        CurrentRoll.clear();
+        for (DiceModel die : Dice) {
+            CurrentRoll.add(die.getValue());
+        }
+        rollHasChanged = true;
+        if (rollCount > 0) {
+            dicePanel.setVisible(true);
+        }
+    }
+
+    public List<Integer> getRoll() {
+        return CurrentRoll;
+    }
+
+    public int getRollsMade() {
+        return rollCount;
     }
 
     public void paintComponent(Graphics g) {

@@ -276,13 +276,13 @@ public class ScorecardPanel extends JPanel {
         for (ScorecardRow row : lowerScoreRows) {
             if (row.IsMarked()) {
                 row.setButtonVisibility(false);
-                if (row.getName().equals("Yahtzee")) {
+                if (row.getName().equals("Yahtzee") && row.getScore() > 0) {
                     checkBonusYahtzee = true;
                 }
             } else {
                 rollType = row.getName();
                 int previewScore = calcRoll(rollType, roll);
-                if (checkBonusYahtzee) {
+                if (checkBonusYahtzee && previewScore > 0) {
                     row.setScorePreview(previewScore + 50);
                 } else {
                     row.setScorePreview(previewScore);

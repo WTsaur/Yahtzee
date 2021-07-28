@@ -30,6 +30,6 @@ public class Player implements Serializable, Comparable<Player> {
 
     @Override
     public int compareTo(Player o) {
-        return this.scorecard.getGrandTotal() - o.scorecard.getGrandTotal();
+        return o.scorecard.getGrandTotal() - this.scorecard.getGrandTotal();
     }
 }
