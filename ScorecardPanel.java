@@ -3,7 +3,6 @@ package Yahtzee;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.ArrayList;
 
 import java.awt.Dimension;
@@ -25,21 +24,34 @@ import javax.swing.plaf.ColorUIResource;
 
 public class ScorecardPanel extends JPanel {
 
-    private Set<String> NoBtnSet = new HashSet<String>() {{
-        add("Total");
-        add("63+ scores a 35 Bonus");
-        add("Upper Section Total");
-        add("Lower Section Total");
-        add("Grand Total");
+    public static final List<String> UpperSectionLabels = new ArrayList<String>(){{
+        add("Aces");
+        add("Twos");
+        add("Threes");
+        add("Fours");
+        add("Fives");
+        add("Sixes");
     }};
+
+    public static final List<String> LowerSectionLabels = new ArrayList<String>() {{
+        add("3 of a kind");
+        add("4 of a kind");
+        add("Full House");
+        add("Small Straight");
+        add("Large Straight");
+        add("Chance");
+        add("Yahtzee");
+        add("Yahtzee Bonus");
+    }};
+    
     private static Scorecard ScoreData = null;
-    private List<ScorecardRow> upperScoreRows = new ArrayList<ScorecardRow>();
-    private List<ScorecardRow> lowerScoreRows = new ArrayList<ScorecardRow>();
-    private ScorecardRow upperTotalRow;
-    private ScorecardRow lowerTotalRow;
-    private ScorecardRow grandTotalRow;
-    private ScorecardRow totalRow;
-    private ScorecardRow upperBonusRow;
+    private static List<ScorecardRow> upperScoreRows = new ArrayList<ScorecardRow>();
+    private static List<ScorecardRow> lowerScoreRows = new ArrayList<ScorecardRow>();
+    private static ScorecardRow upperTotalRow;
+    private static ScorecardRow lowerTotalRow;
+    private static ScorecardRow grandTotalRow;
+    private static ScorecardRow totalRow;
+    private static ScorecardRow upperBonusRow;
 
     private class ScorecardRow {
         
@@ -66,15 +78,11 @@ public class ScorecardPanel extends JPanel {
                         scoreLabel.setText("0");
                         ScoreData.insertScore(getName(), 0);
                     }
-                    //Prepare for next player
+                    /* Prepare for next player */
                     ScoreData = null;
                     Board.scoreMarkedListener();
                 }
             });
-
-            if (NoBtnSet.contains(text)) {
-                selectButton.setVisible(false);
-            }
         }
 
         private String getName() {
@@ -133,16 +141,18 @@ public class ScorecardPanel extends JPanel {
 
         GridBagConstraints gbc = new GridBagConstraints();
 
+        /* constructin section labels for scorecard rows */
         JLabel upperSectLabel = new JLabel("Upper Section");
         upperSectLabel.setFont(new Font("Sansserif", Font.BOLD, 17));
 
         JLabel lowerSectLabel = new JLabel("Lower Section");
         lowerSectLabel.setFont(new Font("Sansserif", Font.BOLD, 17));
 
-        for (String label : Scorecard.UpperSectionLabels) {
+        /* Constructing scorecard rows */
+        for (String label : UpperSectionLabels) {
             upperScoreRows.add(new ScorecardRow(label));
         }
-        for (String label : Scorecard.LowerSectionLabels) {
+        for (String label : LowerSectionLabels) {
             lowerScoreRows.add(new ScorecardRow(label));
         }
         upperTotalRow = new ScorecardRow("Upper Section Total");
@@ -151,6 +161,14 @@ public class ScorecardPanel extends JPanel {
         totalRow = new ScorecardRow("Total");
         upperBonusRow = new ScorecardRow("63+ scores a 35 Bonus");
 
+        /* these rows do no need buttons */
+        upperTotalRow.selectButton.setVisible(false);
+        lowerTotalRow.selectButton.setVisible(false);
+        grandTotalRow.selectButton.setVisible(false);
+        totalRow.selectButton.setVisible(false);
+        upperBonusRow.selectButton.setVisible(false);
+
+        /* adding uppersection rows to the left panel */
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 1;
@@ -179,6 +197,7 @@ public class ScorecardPanel extends JPanel {
         leftPanel.add(grandTotalRow.scoreLabel);
         leftPanel.add(grandTotalRow.selectButton);
 
+        /* adding left panel to left side */
         gbc.gridy++;
         add(leftPanel, gbc);
 
@@ -190,6 +209,7 @@ public class ScorecardPanel extends JPanel {
         gbc.gridy = 0;
         add(lowerSectLabel, gbc);
 
+        /* adding lower section rows to right panel */
         JPanel rightPanel = new JPanel();
         rightPanel.setOpaque(false);
         rightPanel.setLayout(new GridLayout(lowerScoreRows.size() + 1, 3));
@@ -203,6 +223,7 @@ public class ScorecardPanel extends JPanel {
         rightPanel.add(lowerTotalRow.scoreLabel);
         rightPanel.add(lowerTotalRow.selectButton);
 
+        /* addring right panel to right side */
         gbc.gridy++;
         add(rightPanel, gbc);
     }
@@ -255,13 +276,13 @@ public class ScorecardPanel extends JPanel {
         for (ScorecardRow row : lowerScoreRows) {
             if (row.IsMarked()) {
                 row.setButtonVisibility(false);
-                if (row.getName().equals("Yahtzee")) {
+                if (row.getName().equals("Yahtzee") && row.getScore() > 0) {
                     checkBonusYahtzee = true;
                 }
             } else {
                 rollType = row.getName();
                 int previewScore = calcRoll(rollType, roll);
-                if (checkBonusYahtzee) {
+                if (checkBonusYahtzee && previewScore > 0) {
                     row.setScorePreview(previewScore + 50);
                 } else {
                     row.setScorePreview(previewScore);
@@ -270,6 +291,7 @@ public class ScorecardPanel extends JPanel {
         }
     }
 
+    /* returns value of roll if it is of given type, otherwise return 0 */
     public int calcRoll(String type, List<Integer> roll)
 	{
         List<Integer> noDupes = new ArrayList<Integer>(new HashSet<Integer>(roll));

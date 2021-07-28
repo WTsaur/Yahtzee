@@ -1,57 +1,79 @@
 package Yahtzee;
+
+
 import java.io.*;
+
+
 import java.util.*;
 
 //reference: https://www.baeldung.com/java-serialization
 
 public class GameData implements Serializable {
-	Vector<Player> players;
-	int currentPlayerTurn;
-	int currentRoundCount;
+
+	private Vector<Player> players;
+	private List<Integer> currentRoll;
+	private int currentTurnIdx;
+	private int roundCount;
+	private int rollsMade;
 	
 	GameData(Vector<Player> players) {
 		this.players = players;
-		currentPlayerTurn = 0;
-		currentRoundCount = 0;
+		currentTurnIdx = 0;
+		roundCount = players.size() * 13;
+		currentRoll = new ArrayList<>();
+		rollsMade = 0;
 	}
 	
+	public void increaseTurnIdx() {
+		if (!(++currentTurnIdx < players.size())) {
+			currentTurnIdx = 0;
+		}
+		--roundCount;
+	}
+
 	public void setPlayerList(Vector<Player> players) {
 		this.players = players;
-	}
-	
-	public Vector<Player> getPlayerList () {
-		return players;
+		currentTurnIdx = 0;
+		roundCount = players.size() * 13;
 	}
 	
 	public void setCurrentPlayerTurn(int turnNumber) {
-		currentPlayerTurn = turnNumber;
+		currentTurnIdx = turnNumber;
+	}
+
+	public void setRoundCount(int roundNumber) {
+		roundCount = roundNumber;
+	}
+
+	public void setRollData(int rollsMade, List<Integer> currentRoll) {
+		this.rollsMade = rollsMade;
+		this.currentRoll = currentRoll;
 	}
 	
-	public int getCurrentPlayerTurn() {
-		return currentPlayerTurn;
+	public Vector<Player> getPlayerList() {
+		return players;
+	}
+
+	public Player getCurrentPlayer() {
+		return players.get(currentTurnIdx);
 	}
 	
-	public void setCurrentRoundCount(int roundNumber) {
-		currentRoundCount = roundNumber;
+	public int getRoundCount() {
+		return roundCount;
 	}
-	
-	public int getCurrentRoundCount() {
-		return currentRoundCount;
+
+	public int getRollsMade() {
+		return rollsMade;
 	}
-	
-	public void saveCurrentGame() {
-		FileOutputStream fileOutputStream = new FileOutputStream("savedGame.txt");
-		ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-		objectOutputStream.writeObject(this);
-		objectOutputStream.flush();
-		objectOutputStream.close();
+
+	public List<Integer> getCurrentRoll() {
+		return currentRoll;
 	}
-	
-	public GameData loadSavedGame() {
-		FileInputStream fileInputStream = new FileInputStream("savedGame.txt");
-		ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-		GameData game = (GameData) objectInputStream.readObject();
-		objectInputStream.close();
-		return game;
+
+	public void reset() {
+		players.clear();
+		currentTurnIdx = 0;
+		roundCount = 0;
+
 	}
 }

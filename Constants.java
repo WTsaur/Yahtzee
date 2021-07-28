@@ -13,4 +13,5 @@ public class Constants {
     public static final String SCORECARD_IMAGE_PATH = BASE_IMAGE_PATH + "Scorecard.png";
     public static final String PAUSE_IMAGE_PATH = BASE_IMAGE_PATH + "Pause.png";
     public static final String SCORE_NULL = "-";
+    public static final String GAME_DATA_FILE = "YahtzeeSavedGame.txt";
 }

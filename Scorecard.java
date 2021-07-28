@@ -1,32 +1,12 @@
+
 package Yahtzee;
 
-import java.util.ArrayList;
+import java.io.Serializable;
+
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Scorecard implements Serializable {
-
-    public static List<String> UpperSectionLabels = new ArrayList<String>(){{
-        add("Aces");
-        add("Twos");
-        add("Threes");
-        add("Fours");
-        add("Fives");
-        add("Sixes");
-    }};
-
-    public static List<String> LowerSectionLabels = new ArrayList<String>() {{
-        add("3 of a kind");
-        add("4 of a kind");
-        add("Full House");
-        add("Small Straight");
-        add("Large Straight");
-        add("Chance");
-        add("Yahtzee");
-        add("Yahtzee Bonus");
-    }};
-
     private Map<String, Integer> Scores = new HashMap<String, Integer>();
     private int LowerSectionTotal;
     private int UpperSectionTotal;
@@ -34,10 +14,10 @@ public class Scorecard implements Serializable {
     private int UpperBonus;
 
     public Scorecard() {
-        for (String label : UpperSectionLabels) {
+        for (String label : ScorecardPanel.UpperSectionLabels) {
             Scores.put(label, -1);
         }
-        for (String label : LowerSectionLabels) {
+        for (String label : ScorecardPanel.LowerSectionLabels) {
             Scores.put(label, -1);
         }
         LowerSectionTotal = 0;
@@ -67,7 +47,7 @@ public class Scorecard implements Serializable {
     }
 
     public void insertScore(String label, int val) {
-        if (UpperSectionLabels.contains(label)) {
+        if (ScorecardPanel.UpperSectionLabels.contains(label)) {
             Scores.put(label, val);
             UpperSectionTotal += val;
             Total += val;
@@ -89,3 +69,4 @@ public class Scorecard implements Serializable {
         return Scores.get(label);
     }
 }
+

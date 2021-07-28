@@ -1,6 +1,5 @@
 package Yahtzee;
 
-
 import java.net.URL;
 
 import java.awt.Image;
@@ -9,6 +8,8 @@ import java.awt.Graphics;
 
 import javax.swing.JPanel;
 import javax.swing.ImageIcon;
+
+/* A base background panel to be used as the foundation for other components to reside in */
 
 public class Panel extends JPanel {
     
