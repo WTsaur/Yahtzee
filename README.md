@@ -67,7 +67,9 @@
 - EndGame logic
 
 ### Lucas Zavalia
-- 
+- Scorecard.java
+- Yahtzee.java
+- EndgameScreen.java
 
 ### William Tsaur
 - Panel.java
