@@ -6,12 +6,10 @@ import java.net.URL;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.Color;
 import java.awt.Image;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.border.LineBorder;
 
 public class DiceModel extends JButton {
    private static final int SCALE_VALUE = 170;
@@ -23,20 +21,30 @@ public class DiceModel extends JButton {
       Image img = new ImageIcon(url).getImage().getScaledInstance(SCALE_VALUE, SCALE_VALUE, Image.SCALE_DEFAULT);
       ImageIcon defaultIcon = new ImageIcon(img);
       setIcon(defaultIcon);
-      setBorder(new LineBorder(Color.WHITE, 4, true));
-      setBorderPainted(selected);
+      setOpaque(false);
       addActionListener(new ActionListener() {
          @Override
          public void actionPerformed(ActionEvent e) {
             selected = !selected;
-            setBorderPainted(selected);
+            URL url;
+            if (selected) {
+               url = this.getClass().getResource(Constants.BASE_IMAGE_PATH + "Dice-" + value + "-locked.png");
+            } else {
+               url = this.getClass().getResource(Constants.BASE_IMAGE_PATH + "Dice-" + value + ".png");
+            }
+            Image img = new ImageIcon(url).getImage().getScaledInstance(SCALE_VALUE, SCALE_VALUE, Image.SCALE_DEFAULT);
+            ImageIcon newIcon = new ImageIcon(img);
+            setIcon(newIcon);
          }  
       });
    }
 
    public void reset() {
       selected = false;
-      setBorderPainted(selected);
+      URL url = this.getClass().getResource(Constants.BASE_IMAGE_PATH + "Dice-" + value + ".png");
+      Image img = new ImageIcon(url).getImage().getScaledInstance(SCALE_VALUE, SCALE_VALUE, Image.SCALE_DEFAULT);
+      ImageIcon newIcon = new ImageIcon(img);
+      setIcon(newIcon);
    }
 
    public boolean isSelected() {
