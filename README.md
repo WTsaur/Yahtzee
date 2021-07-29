@@ -1,4 +1,5 @@
 # [Yahtzee](https://github.com/WTsaur/Yahtzee)
+## Created by William Tsaur, Iris Pounsberry, Lucas Zavalia
 
 ## Compiling and Running
 *Note: Ensure you have the latest version of Java installed* 
@@ -10,7 +11,45 @@
 > and run `hwx.jar` with the following command: `java -jar hwx.jar`
 
 ## Yahtzee Rules
-**[Click Here](https://www.ultraboardgames.com/yahtzee/game-rules.php)**
+> Roll up to 3 times each turn to rack up the best possible score.
+> Decide which dice combo you're going for.
+> Then select where you would like to enter the score on the scorecard.
+
+## Understanding the Scorecard
+### Aces, Twos, Threes, Fours, Fives, Sixes
+> These scores count and add only the number they represent.
+
+### Upper section 35 Bonus
+> You get a +35 point bonus if the total score for your upper section is greater than or equal to 63.
+
+### 3 of a kind
+> Any roll with 3 dice having the same number. The total of the roll is simply added up.
+
+### 4 of a kind
+> Any roll with 3 dice having the same number. The total of the roll is simply added up.
+
+### Full House
+> A roll with a pair of matching dice and a triplet of matching dice.
+> This does not total up the dice and instead gives you 25 points.
+
+### Small Straight
+> A roll with 4 dice in a strict increasing order (ex: 3, 4, 5, 6).
+> This does not total up the dice and instead gives you 30 points.
+
+### Large Straight
+> A roll with 5 dice in a strict increasing order (ex: 2, 3, 4, 5, 6).
+> This does not total up the dice and instead gives you 40 points.
+
+### Chance
+> Any type of roll can be added up and placed in this score box.
+
+### Yahtzee
+> A roll where all the dice are the same number.
+> This does not total up the dice and instead gives you 50 points.
+
+### Bonus Yahtzee
+> If you roll a yahtzee but have already marked off your yahtzee score box,
+> then select the bonus yahtzee box to get 100 points added to your total.
 
 ## How To Play The Game!
 ### The Menu
@@ -43,7 +82,7 @@
 
 > When you like what you have or have run out of rolls, head over to the scorecard!
 > Here you can see a preview of what the score would look like on your card as well as your current totals based on your previous turns.
-> `Select` a score if you think the number to the left of it is to your liking!
+> `Select` a score if you think the red preview number is to your liking!
 > `Mark as 0` if you don't like any of your options or if you don't think you'll get lucky with that particular type of roll.
 
 ![Scorecard](https://github.com/WTsaur/Yahtzee/blob/main/images/scorecardImg.png)
@@ -53,6 +92,11 @@
 ![Pause Button](https://github.com/WTsaur/Yahtzee/blob/main/images/pauseImg.png)
 
 ![Pause Menu](https://github.com/WTsaur/Yahtzee/blob/main/images/pauseMenu.png)
+
+### Saving the game
+> To save your game, simply hit pause and click `Quit game`. This will prompt you with a question asking you if
+> you would like to save your game or not.
+> Then the next time you open the game, it will ask you if you would like to resume your saved game.
 
 ## Extra Features Implemented
 - Save/Load a game

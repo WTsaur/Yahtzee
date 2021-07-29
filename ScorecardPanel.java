@@ -283,6 +283,7 @@ public class ScorecardPanel extends JPanel {
                 rollType = row.getName();
                 int previewScore = calcRoll(rollType, roll);
                 if (checkBonusYahtzee && previewScore > 0) {
+                    row.setButtonVisibility(true);
                     row.setScorePreview(previewScore + 50);
                 } else {
                     row.setScorePreview(previewScore);
